@@ -1,7 +1,7 @@
 '''
-How to install numpy:
+How to install numpy and scipy:
 
-Open Blender, open python console in Blender
+Open Blender, open python console
 >>> import sys
 >>> sys.exec_prefix
 '/path/to/blender/python
@@ -11,6 +11,12 @@ Open a windows console as admin:
 cd /path/to/blender/python/bin
 python -m ensurepip
 python -m pip install numpy
+python -m pip install scipy
+
+
+How to run this script:
+Open a window in Blender and set it to "Text Editor"
+Use the navigator to load this script
 
 '''
 
@@ -22,6 +28,8 @@ import mathutils
 import os
 from os.path import join, dirname
 
+os.system("cls")
+
 # Add the folder that contains this script to the path, so we can access utils.py
 # https://blender.stackexchange.com/questions/14911/get-path-of-my-script-file
 for area in bpy.context.screen.areas:
@@ -29,19 +37,19 @@ for area in bpy.context.screen.areas:
 		for space in area.spaces:
 			if space.type == 'TEXT_EDITOR':
 				scriptFolder = dirname(space.text.filepath)
-				print(scriptFolder)
 				sys.path.insert(0, scriptFolder)	
 
 from utils import LoadMatFile
 
-os.system("cls")
 
 def main():
+	# ---- change these ------
 	pathToMainDataset = 'D:/DOG'
-	dog = 'louie'
+	dog = 'dog2'
 	motion = 'testSeq'
+	# ---- change these ------
 
-
+	
 	pathToMotion = os.path.join(pathToMainDataset, dog, 'motion_%s'%motion)
 	bvhSkelFile = os.path.join(pathToMotion, 'motion_capture', 'skeleton.bvh')
 	pathToSkinningWeights = os.path.join(pathToMainDataset, dog, 'meta', 'skinningWeights.mat')
