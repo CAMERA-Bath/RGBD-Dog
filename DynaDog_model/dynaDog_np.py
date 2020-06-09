@@ -265,8 +265,7 @@ class DynaDog():
 			jnts_new[i,:] = G[i,0:3,3]
 		self.J_neutral = jnts_new
 		
-		# new skinning
-		# remove the transformation due to the rest pose. Note here that we're using self.J, which has the additional shoulder&ear offsets (if applicable)
+		# remove the transformation due to the rest pose
 		G = G - self.pack(
 			np.matmul(
 				G,
@@ -283,8 +282,6 @@ class DynaDog():
 		# ------------  the dog is now in the standing neutral pose, for both the skeleton and mesh ------------
 
 		
-		
-
 		# apply the pose rotation and translation
 		# get the world transformation of each joint		
 		jnts_current = self.J_neutral + allOffsets
@@ -307,17 +304,19 @@ class DynaDog():
 		self.J = jnts_new
 		
 		# remove the transformation due to the rest pose
+		G_temp = G.copy()
 		G = G - self.pack(
 			np.matmul(
 			G,
 			np.hstack([self.J_neutral, np.zeros([self.numJoints, 1])]).reshape([self.numJoints, 4, 1])
 			)
 			)
-		# transformation of each vertex
+
+		# transform each vertex
 		T = np.tensordot(self.skinning_weights, G, axes=[[1], [0]])
 		rest_shape_h = np.hstack((self.verts_neutral, np.ones([self.verts_neutral.shape[0], 1])))
 		v = np.matmul(T, rest_shape_h.reshape([-1, 4, 1])).reshape([-1, 4])[:, :3]
-		# apply root transformation
+		# apply root translation
 		self.verts = v + self.rootTrans.reshape([1, 3])
 		
 
@@ -512,7 +511,7 @@ if __name__ == '__main__':
 	# read animation from bvh file. NOTE the translation for the shoulder and ears is not currently included in this feature
 	applyMotionFrom_dog = 'dog1'
 	applyMotionFrom_motion = 'trot'
-	applyMotionFrom_frame = 0
+	applyMotionFrom_frame = 1
 	pathToBvh = os.path.join(datasetFolder, applyMotionFrom_dog, 'motion_%s'%applyMotionFrom_motion, 'motion_capture', 'skeleton.bvh')
 	bvhPoints, connections, nodes = utils.ReadBvhFile(pathToBvh)
 	pose = utils.GetLocalRotationsForFrame(nodes, applyMotionFrom_frame, asType='rodrigues')

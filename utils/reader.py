@@ -190,12 +190,27 @@ class MyReader(bvh.BVHReader) :
 			
 			offsets = matrix('0.,0.,0.')
 			rotation_euler = [xangle,yangle,zangle]
-			thisRotation = self.rotationMatrix(xangle,yangle,zangle)
+			
+			thisRotation = self.rotationMatrix(xangle,yangle,zangle) #order='zxy'
+			# thisRotation can be acquired using
+			# from scipy.spatial.transform import Rotation as Rsci
+			# np.matmul(np.matmul(Rsci.from_euler('y',-yangle).as_dcm(), Rsci.from_euler('x',-xangle).as_dcm()), Rsci.from_euler('z',-zangle).as_dcm())
+			
+			# self.rotationMatrix(xangle,yangle,0)
+			# np.matmul(Rsci.from_euler('y',-yangle).as_dcm(), Rsci.from_euler('x',-xangle).as_dcm())
+			
+			# self.rotationMatrix(0,yangle,zangle)
+			# np.matmul(Rsci.from_euler('y',-yangle).as_dcm(), Rsci.from_euler('z',-zangle).as_dcm())
+			
+			# self.rotationMatrix(xangle,0,zangle)
+			# np.matmul(Rsci.from_euler('x',-xangle).as_dcm(), Rsci.from_euler('z',-zangle).as_dcm()) 
+			
+			# but I haven't yet figured out how to get euler back from thisRotation, using Rsci.from_dcm()
+			
 			thisPosition = [xpos, ypos, zpos]
 			
 			isEndEff = len(self.nodes[i].children) == 0
 			if isEndEff: #is an end effectors
-				# print('adding offset', self.nodes[i].name)
 				thisPosition = offsets + thisPosition
 			struct = Position()
 			xyzStruct.append(struct)

@@ -541,33 +541,74 @@ def ReadBvhFile(filname, onTheSpot=False, scale=1, transposeAfterReading=True):
 '''
 Using the nodes from ReadBvhFile, extract the local rotations as either quaternions or rodrigues vectors
 by default, the order is altered, to work with DynaDog.py
+if returning the 3x3 rotation matrices, the order of rotation is not reordered
 '''
 def GetLocalRotationsForFrame(nodes, frame, asType='quat', reorder=True):
-    assert asType in ['quat', 'rodrigues'], 'unsupported type %s' % asType
+	assert asType in ['quat', 'rodrigues', 'dcm'], 'unsupported type %s' % asType
     
-    numJoints = len(nodes)
-    if asType == 'quat':
-        rot = np.empty((numJoints,4))
-        order = np.array((0,1,2,3))
-        if reorder:
-            order = np.array((2,0,1,3))
-            
-        for node in nodes:
-            rot_local = np.array(node.rotation_local)
-            r = Rsci.from_dcm(rot_local[frame]).as_quat()
-            rot[node.idx] = r[order]
-    else:
-        rot = np.empty((numJoints,3))
-        order = np.array((0,1,2))
-        if reorder:
-            order = np.array((2,0,1))
-            
-        for node in nodes:
-            rot_local = np.array(node.rotation_local)
-            r = Rsci.from_dcm(rot_local[frame]).as_rotvec()
-            rot[node.idx] = r[order]
-    return rot
+	numJoints = len(nodes)
+	if asType == 'quat':
+		rot = np.empty((numJoints,4))
+		order = np.array((0,1,2,3))
+		if reorder:
+			order = np.array((2,0,1,3))
+			
+		for node in nodes:
+			rot_local = np.array(node.rotation_local)
+			r = Rsci.from_dcm(rot_local[frame]).as_quat()
+			rot[node.idx] = r[order]
+	elif asType == 'rodrigues':
+		rot = np.empty((numJoints,3))
+		order = np.array((0,1,2))
+		if reorder:
+			order = np.array((2,0,1))
+			
+		for node in nodes:
+			rot_local = np.array(node.rotation_local)
+			r = Rsci.from_dcm(rot_local[frame]).as_rotvec()
+			rot[node.idx] = r[order]
+	else:
+		rot = np.empty((numJoints,3,3))
+		for node in nodes:
+			rot_local = np.array(node.rotation_local)
+			rot[node.idx] = rot_local[frame]
+	return rot
 	
+'''
+Using the nodes from ReadBvhFile, extract the world rotations as either quaternions or rodrigues vectors
+by default, the order is altered, to work with DynaDog.py
+if returning the 3x3 rotation matrices, the order of rotation is not reordered
+'''
+def GetWorldRotationsForFrame(nodes, frame, asType='quat', reorder=True):
+	assert asType in ['quat', 'rodrigues', 'dcm'], 'unsupported type %s' % asType
+
+	numJoints = len(nodes)
+	if asType == 'quat':
+		rot = np.empty((numJoints,4))
+		order = np.array((0,1,2,3))
+		if reorder:
+			order = np.array((2,0,1,3))
+			
+		for node in nodes:
+			rot_world = np.array(node.rotation_world)
+			r = Rsci.from_dcm(rot_world[frame]).as_quat()
+			rot[node.idx] = r[order]
+	elif asType == 'rodrigues':
+		rot = np.empty((numJoints,3))
+		order = np.array((0,1,2))
+		if reorder:
+			order = np.array((2,0,1))
+			
+		for node in nodes:
+			rot_world = np.array(node.rotation_world)
+			r = Rsci.from_dcm(rot_world[frame]).as_rotvec()
+			rot[node.idx] = r[order]
+	else:
+		rot = np.empty((numJoints,3,3))
+		for node in nodes:
+			rot_world = np.array(node.rotation_world)
+			rot[node.idx] = rot_world[frame]
+	return rot
 	
 	
 '''
