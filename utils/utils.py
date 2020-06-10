@@ -312,7 +312,7 @@ Returns:
 
 	ax, fig for matplotlib
 '''
-def Plot3d(points, connections=[], style='bo-', ax=[], differentColoursForSides=False, sideColours=[], jointSpecificClrs=[], markerStyle='o', lineStyle='-', jointNames=[]):
+def Plot3d(points, connections=[], style='bo-', ax=[], differentColoursForSides=False, sideColours=[], jointSpecificClrs=[], markerStyle='o', lineStyle='-', jointNames=[], markerSize=6):
 
 	numBones = points.shape[0]	
 	if connections == []:
@@ -388,14 +388,14 @@ def Plot3d(points, connections=[], style='bo-', ax=[], differentColoursForSides=
 				parentName = jointNames[connections[b]]
 				if boneName[0] == 'l' or parentName[0] == 'l':
 					# img =cv2.line(img, (cx, cy), (px, py), (255,0,255) ,scale) # yellow?
-					ax.plot([bone[0], pBone[0]], [bone[1], pBone[1]], [bone[2], pBone[2]], color=sideColours[0], marker=markerStyle, linestyle=lineStyle)
+					ax.plot([bone[0], pBone[0]], [bone[1], pBone[1]], [bone[2], pBone[2]], color=sideColours[0], marker=markerStyle, linestyle=lineStyle, markerSize=markerSize)
 				else:
 					# img =cv2.line(img, (cx, cy), (px, py), (255,0,0) ,scale) # blue?
-					ax.plot([bone[0], pBone[0]], [bone[1], pBone[1]], [bone[2], pBone[2]], color=sideColours[1], marker=markerStyle, linestyle=lineStyle)
+					ax.plot([bone[0], pBone[0]], [bone[1], pBone[1]], [bone[2], pBone[2]], color=sideColours[1], marker=markerStyle, linestyle=lineStyle, markerSize=markerSize)
 			elif len(jointSpecificClrs) > 0:
-				ax.plot([bone[0], pBone[0]], [bone[1], pBone[1]], [bone[2], pBone[2]], color=jointSpecificClrs[b], marker=markerStyle, linestyle=lineStyle)
+				ax.plot([bone[0], pBone[0]], [bone[1], pBone[1]], [bone[2], pBone[2]], color=jointSpecificClrs[b], marker=markerStyle, linestyle=lineStyle, markerSize=markerSize)
 			else:
-				ax.plot([bone[0], pBone[0]], [bone[1], pBone[1]], [bone[2], pBone[2]], style)
+				ax.plot([bone[0], pBone[0]], [bone[1], pBone[1]], [bone[2], pBone[2]], style, markerSize=markerSize)
 		
 		
 		

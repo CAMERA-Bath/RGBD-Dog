@@ -21,8 +21,8 @@ def SetValues():
 	motion = 'walk'
 	cam = '00'
 	
-	cameraType = 'sony'
-	# cameraType = 'kinect_rgb'
+	# cameraType = 'sony'
+	cameraType = 'kinect_rgb'
 	# cameraType = 'kinect_depth'
 	
 	cameraFrame = 13

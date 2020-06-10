@@ -82,9 +82,9 @@ def main(pathToMainDataset, dog, motion, cameraFrame):
 				
 	fig = plt.figure(); ax = fig.add_subplot(111, projection='3d') 
 	ax, fig = utils.Plot3d(bvhJoints, connections=skelConnections, style='bo-', ax=ax, jointSpecificClrs=utils.GetDefaultColours())
-	# ax, fig = utils.Plot3d(markers, connections=markerConn, style='bo-', ax=ax, differentColoursForSides=True)
 	ax, fig = utils.Plot3d(markers, connections=markerConn, style='ko--', ax=ax, differentColoursForSides=True)
-	ax.set_xlabel('x');ax.set_ylabel('y');ax.set_aspect('auto');plt.show()
+	ax.set_xlabel('x');ax.set_ylabel('y');ax.set_aspect('auto');
+	plt.title('markers in black, skeleton in colour'); plt.show()
 	
 
 if __name__ == '__main__':

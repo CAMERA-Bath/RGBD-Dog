@@ -80,8 +80,8 @@ def main(pathToMainDataset, dog, motion, cam, cameraFrame=0):
 	
 
 	fig = plt.figure(); ax = fig.add_subplot(111, projection='3d') 
-	ax.scatter(reconPoints_worldSpace[:,0], reconPoints_worldSpace[:,1], reconPoints_worldSpace[:,2], c="red")
-	ax, fig = utils.Plot3d(bvhJoints, connections=skelConnections, style='bo-', ax=ax, differentColoursForSides=True)
+	ax.plot(reconPoints_worldSpace[:,0], reconPoints_worldSpace[:,1], reconPoints_worldSpace[:,2], 'ro', markersize=3)
+	ax, fig = utils.Plot3d(bvhJoints, connections=skelConnections, style='bo-', ax=ax, differentColoursForSides=True, markerSize=3)
 	ax.set_xlabel('x');ax.set_ylabel('y');ax.set_aspect('auto');plt.show()
 	reconPoints = reconPoints_worldSpace
 	

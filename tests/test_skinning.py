@@ -1,6 +1,6 @@
 '''
 Note that this test is for the skinning weights of the dog
-It does not yet take the animation from the bvh file and apply it to the mesh
+
 '''
 
 import json
@@ -41,7 +41,6 @@ def main(pathToMainDataset, dog, motion, cameraFrame):
 		with open(skelNodes_asPck, 'rb') as f:
 			nodes = pickle.load(f)
 	else:
-		# bvhJoints, skelConnections, nodes = utils.ReadBvhFile(bvhSkelFile, False, 10)
 		bvhJoints, skelConnections, nodes = utils.ReadBvhFile(bvhSkelFile, False)
 		bvhJoints = utils.MovePointsOutOfMayaCoordSystem(bvhJoints, 1)
 		
@@ -104,7 +103,7 @@ def main(pathToMainDataset, dog, motion, cameraFrame):
 	
 	fig = plt.figure(); ax = fig.add_subplot(111, projection='3d')	
 	ax, fig = utils.Plot3d(bvhJoints, connections=skelConnections, style='bo-', ax=ax, differentColoursForSides=False)
-	ax.plot(verts[:,0], verts[:,1], verts[:,2], 'go')
+	ax.plot(verts[:,0], verts[:,1], verts[:,2], 'go', markersize=2)
 	plt.title('skeleton and mesh with skinning applied')
 	ax.set_xlabel('x'); ax.set_ylabel('y'); ax.set_aspect('auto')
 	plt.show()
