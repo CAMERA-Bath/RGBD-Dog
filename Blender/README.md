@@ -25,3 +25,5 @@ python -m pip install scipy
 2. Use the navigator to load this script
 3. Edit the values in pathToMainDataset, dog or motion
 4. Click the "run script" button
+
+![RGBD-Dog](/figs/blender.png)
