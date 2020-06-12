@@ -1190,7 +1190,7 @@ def LoadObjFile(fullPath, rotate=False):
 	texture = texture[:,0:2]
 	
 	faces = ob.face
-	if faces[0][0] == faces[0][1] and faces[0][0] == faces[0][2]:
+	if faces[0][0] == faces[0][1] and faces[0][0] == faces[0][2]  or faces[0][1] is None:
 		# faces in the file are in the format 'f 736/736/736 40/40/40 46/46/46', giving 3 entries per face. 
 		# Change it to be 1 entry of '736/40/46'
 		faces = [face[0] for face in ob.face]

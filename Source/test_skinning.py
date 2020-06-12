@@ -11,7 +11,6 @@ from mpl_toolkits.mplot3d import Axes3D
 import pickle
 
 import sys, os
-sys.path.insert(0, os.path.abspath('..'))
 from utils import utils
 from scipy.spatial.transform import Rotation as Rsci
 

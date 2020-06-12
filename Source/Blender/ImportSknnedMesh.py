@@ -41,13 +41,14 @@ for area in bpy.context.screen.areas:
 
 from utils import LoadMatFile
 
-
-def main():
-	# ---- change these ------
+def SetValues():
 	pathToMainDataset = 'D:/DOG'
-	dog = 'dog2'
+	dog = 'dog1'
 	motion = 'testSeq'
-	# ---- change these ------
+	return pathToMainDataset, dog, motion
+	
+def main():
+	pathToMainDataset, dog, motion = SetValues()
 
 	
 	pathToMotion = os.path.join(pathToMainDataset, dog, 'motion_%s'%motion)

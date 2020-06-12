@@ -502,20 +502,20 @@ if __name__ == '__main__':
 	rootTrans = np.zeros(dynaDog.trans_shape)
 	shldr = np.zeros(dynaDog.shoulderEarTrans_shape)
 	
-	'''
+	# '''
 	# Other examples:
 	# dynaDog.set_params()
 	
 	# or 
 	
 	# read animation from bvh file. NOTE the translation for the shoulder and ears is not currently included in this feature
-	applyMotionFrom_dog = 'dog1'
+	applyMotionFrom_dog = 'dog2'
 	applyMotionFrom_motion = 'trot'
 	applyMotionFrom_frame = 1
 	pathToBvh = os.path.join(datasetFolder, applyMotionFrom_dog, 'motion_%s'%applyMotionFrom_motion, 'motion_capture', 'skeleton.bvh')
 	bvhPoints, connections, nodes = utils.ReadBvhFile(pathToBvh)
 	pose = utils.GetLocalRotationsForFrame(nodes, applyMotionFrom_frame, asType='rodrigues')
-	'''
+	# '''
 	
 	dynaDog.set_params(beta=beta, pose=pose, rootTrans=rootTrans, shoulderEarTrans=shldr)
 	
