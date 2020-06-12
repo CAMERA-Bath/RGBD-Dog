@@ -34,6 +34,7 @@ from utils import utils
 
 DISPLAY_SIZE = 700
 pathToMainDataset = 'D:/DOG'
+play_speed = 10 # 1000 ms = 1 s
 
 class MainWindow(QMainWindow):
 	def __init__(self, parent=None):
@@ -43,7 +44,9 @@ class MainWindow(QMainWindow):
 
 		self.is_playing = False
 		self.animTimer = QTimer()
-		self.animTimer.setInterval(500) # 1000 ms = 1 s
+		self.play_speed_userDef = play_speed
+		self.play_speed = play_speed # speed will be slowed down x30 for Kinect, since the images are furth apart in time
+		self.animTimer.setInterval(self.play_speed)
 		self.animTimer.timeout.connect(self.read_next_frame) # connect timeout signal to signal handler
 		self.animTimer.stop()
 		
@@ -169,7 +172,9 @@ class MainWindow(QMainWindow):
 		camVis_pb = QPushButton('Cameras')
 		camVis_pb.clicked.connect(partial(self.ToggleVisibility, 'cameras'))
 		self.anim_layout.addWidget(camVis_pb, 0,6)
-		
+		maskVis_pb = QPushButton('Mask')
+		maskVis_pb.clicked.connect(partial(self.ToggleVisibility, 'masks'))
+		self.anim_layout.addWidget(maskVis_pb, 0,7)
 		# ---- visibility controls ----
 		
 		
@@ -356,13 +361,13 @@ class MainWindow(QMainWindow):
 	# this is called every time we go back/forward a frame, change camera, etc
 	def UpdatePlotData(self, frame):
 
-		# import pdb; pdb.set_trace()
 		if self.showMeshMask:
-			print('showMeshMask')
-			# mask = GetMaskForFrameIdx(camIdx, self.anim_frame)
-			# frame = cv2.bitwise_and(frame, mask)
-			
-		
+			mask = cv2.imread(join(self.pathToMasks % self.cams[self.camIdx], self.imageNames[self.imageFrame]), -1)
+			mask = cv2.resize(mask, (0,0), fx=self.postProjectionScale, fy=self.postProjectionScale, interpolation=cv2.INTER_NEAREST ) 
+			mask = mask/np.amax(mask)
+			mask = np.stack((mask.astype(np.uint8),)*3, axis=-1)
+			frame = frame * mask
+
 		if self.plotMarkers:
 			points2d = self.GetProjectedPoints(self.markers[:,:,self.markerFrame])
 			points2d *= self.postProjectionScale
@@ -391,10 +396,12 @@ class MainWindow(QMainWindow):
 	def ToggleVisibility(self, dataType):
 		if dataType == 'markers':
 			self.plotMarkers = not self.plotMarkers
-		if dataType == 'skeleton':
+		elif dataType == 'skeleton':
 			self.plotSkel = not self.plotSkel	
-		if dataType == 'cameras':
+		elif dataType == 'cameras':
 			self.plotCameras = not self.plotCameras
+		elif dataType == 'masks':
+			self.showMeshMask = not self.showMeshMask
 		self.update_render(True) # don't go onto the next frame
 		
 	def GetProjectedPoints(self, points3d):
@@ -439,13 +446,22 @@ class MainWindow(QMainWindow):
 		
 	def ChangeModality_buttonClick(self, modal):
 		print(modal)
+		prev_model = self.viewDataType
 		self.viewDataType = modal
+		
 		self.ChangeModality()
 		self.UpdateDataAfterModalityChange()
-		self.camIdx = 0
+		if not ('kinect' in prev_model and 'kinect' in modal):
+			self.camIdx = 0
+		# else: keep the camera ID the same if flicking between kinect cameras
+		
+		markerFrame_prev = self.markerFrame
+		imageFrame_prev = self.imageFrame
 		self.ChangeCamera(self.camIdx, updateRender=False)
-		self.markerFrame = self.allowableMarkerFrames[0]
-		self.imageFrame = 0
+		if 'kinect' in prev_model and 'kinect' in modal:
+			self.markerFrame = markerFrame_prev
+			self.imageFrame = imageFrame_prev
+		# else keep the image frame the same
 		
 		# update the camera buttons
 		self.view_layout.removeWidget(self.cam_frame)
@@ -485,12 +501,38 @@ class MainWindow(QMainWindow):
 		self.pathToVid = '' # for sony
 		self.pathToImageFolder_current = '' # for kinect
 		self.imageNames = []
+		
+		self.markerPlotSize = 3
+		self.skeletonPlotSize = 4
+		self.skeletonRadiusSize = 2
+		self.cameraPlotRadius = 5
+		self.cameraPlotThickness = 2
+		self.cameraFontScale = 2
+		self.cameraFontThickness = 3
+		
+		
 		if self.viewDataType == 'sony':
 			self.pathToVid = join(self.pathToMotion, 'sony', 'camera%s', 'camera%s_2K.mp4')
 			self.postProjectionScale = 0.5 # 4K calibration values but 2K video
+			self.play_speed = self.play_speed_userDef
+			self.imageFrame = 0
+			self.markerFrame = 0
 		else:
 			self.pathToImageFolder = join(self.pathToMotion, self.viewDataType, 'camera%s', 'images')
+			self.play_speed = self.play_speed_userDef * 30
 			
+			if 'depth' in self.viewDataType:
+				self.markerPlotSize = 2
+				self.skeletonPlotSize = 2
+				self.skeletonRadiusSize = 1
+				self.cameraPlotRadius = 3
+				self.cameraPlotThickness = 1
+				self.cameraFontScale = 0.75
+				self.cameraFontThickness = 1
+				
+		self.animTimer.setInterval(self.play_speed)
+		
+		
 		self.pathToMasks = join(self.pathToMotion, self.viewDataType, 'camera%s', 'masks')
 		self.vidFiles = []
 		self.vidFilesPaths = []
@@ -592,19 +634,14 @@ class MainWindow(QMainWindow):
 		
 	def ChangeCamera(self, camIdx, updateRender=True):
 		self.camIdx = camIdx
-		self.markerPlotSize = 3
-		self.skeletonPlotSize = 4
-		self.skeletonRadiusSize = 2
-		self.cameraPlotRadius = 5
-		self.cameraPlotThickness = 2
-		self.cameraFontScale = 2
-		self.cameraFontThickness = 3
-		
+
 		if self.viewDataType == 'sony':
 			self.vidFile = cv2.VideoCapture(self.vidFilesPaths[self.camIdx])
 			[ret, self.vidFile] = utils_mc.SetVideoToFrameNumber(self.vidFile, self.markerFrame)
 			self.allowableMarkerFrames = np.arange(self.numFrames_skeletonTotal)
 			self.numFrames = self.numFrames_skeletonTotal
+			self.imageNames = utils_mc.GetFilesInFolder(self.pathToMasks  % self.cams[self.camIdx], 'png')
+			# keep marker and image frame the same, since all cameras have the same footage
 		else:
 			self.pathToImageFolder_current = self.pathToImageFolder % self.cams[self.camIdx]
 			self.imageNames = utils_mc.GetFilesInFolder(self.pathToImageFolder_current, 'png')
@@ -613,14 +650,7 @@ class MainWindow(QMainWindow):
 			self.markerFrame = self.allowableMarkerFrames[0]
 			self.imageFrame = 0
 			self.numFrames = len(self.imageNames)
-			if 'depth' in self.viewDataType:
-				self.markerPlotSize = 2
-				self.skeletonPlotSize = 2
-				self.skeletonRadiusSize = 1
-				self.cameraPlotRadius = 3
-				self.cameraPlotThickness = 1
-				self.cameraFontScale = 0.75
-				self.cameraFontThickness = 1
+
 		
 		print('setting calib data to camera', self.camIdx)
 		self.calibData = self.calibData_allCalibs_allCams[self.camIdx]
