@@ -19,6 +19,8 @@ The automatic extraction of animal 3D pose from images without markers is of int
 
 [Link to paper .pdf](https://arxiv.org/pdf/2004.07788.pdf)
 
+[YouTube](https://www.youtube.com/watch?v=sRsjo-pE9hI)
+
 ## Dataset
 Details on accessing the data will be posted in the next few days (as of June 8th 2020)
 

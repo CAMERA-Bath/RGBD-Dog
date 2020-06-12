@@ -2,7 +2,7 @@
 This code is based on smpl_np.py found at https://github.com/benjiebob/SMPL
 as written by Yuxiao Zhou, https://github.com/CalciferZh 
 
-For ease of comparision, this model has been structured similarly to SMPL, SMAL, etc.
+For ease of comparison, this model has been structured similarly to SMPL, SMAL, etc.
 
 You will need to set the base dataset directory path in "datasetFolder"
 '''
@@ -17,11 +17,10 @@ import pickle
 np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
 
 import sys, os
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../Source'))
 from utils import utils
 
-# from utils import utils.GetLocalRotationsForFrame, utils.ReadBvhFile, utils.Plot3d
-
+datasetFolder = 'D:/DOG'
 
 class DynaDog():
 	def __init__(self, model_path, numShapePcs=-1):
@@ -488,7 +487,7 @@ def NormaliseRotations(data, opts=None, unnormalise=0):
 if __name__ == '__main__':
 
 
-	datasetFolder = 'D:/DOG'
+	
 	modelPath = os.path.join(datasetFolder, 'shapeModel', 'dynaDog_v1.0.p')
 
 	print('loading model from', modelPath)
@@ -502,7 +501,7 @@ if __name__ == '__main__':
 	rootTrans = np.zeros(dynaDog.trans_shape)
 	shldr = np.zeros(dynaDog.shoulderEarTrans_shape)
 	
-	# '''
+	'''
 	# Other examples:
 	# dynaDog.set_params()
 	
@@ -515,7 +514,7 @@ if __name__ == '__main__':
 	pathToBvh = os.path.join(datasetFolder, applyMotionFrom_dog, 'motion_%s'%applyMotionFrom_motion, 'motion_capture', 'skeleton.bvh')
 	bvhPoints, connections, nodes = utils.ReadBvhFile(pathToBvh)
 	pose = utils.GetLocalRotationsForFrame(nodes, applyMotionFrom_frame, asType='rodrigues')
-	# '''
+	'''
 	
 	dynaDog.set_params(beta=beta, pose=pose, rootTrans=rootTrans, shoulderEarTrans=shldr)
 	
