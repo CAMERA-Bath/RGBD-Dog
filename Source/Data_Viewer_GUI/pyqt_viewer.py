@@ -1,4 +1,8 @@
-# Imports
+'''
+
+Please note that the code in this script was based on that of https://github.com/benjiebob/SMALViewer
+
+'''
 import numpy as np
 
 from PyQt5 import QtGui, QtCore
@@ -28,9 +32,7 @@ import utils_mc
 sys.path.insert(0, os.path.abspath('..'))
 from utils import utils
 
-# DISPLAY_SIZE = 1024
 DISPLAY_SIZE = 700
-
 pathToMainDataset = 'D:/DOG'
 
 class MainWindow(QMainWindow):

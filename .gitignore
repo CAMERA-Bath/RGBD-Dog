@@ -23,7 +23,6 @@ HNLog.txt
 *.h5
 *.psd
 *.aux
-*.pdf
 *.p
 *.brf
 *.blg

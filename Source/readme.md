@@ -1,7 +1,7 @@
 	
 Each of these tests provides a basic feature of the data. To run:
 ```
-cd path/to/RGBD-Dog/tests
+cd path/to/RGBD-Dog/Source
 python test_TESTNAME.py
 ```
 ### test_3dReconstruction: 
