@@ -4,6 +4,9 @@ Each of these tests provides a basic feature of the data. To run:
 cd path/to/RGBD-Dog/Source
 python test_TESTNAME.py
 ```
+
+Code for importing the animated skeleton and mesh is located in Source/Blender. Code for a GUI to visualise the entire sequence of each motion is included in Source/Data_Viewer_GUI.
+
 ### test_3dReconstruction: 
 Reconstruct the points in the Kinect depth image
 
@@ -12,7 +15,8 @@ Reconstruct the points in the Kinect depth image
 Plot the skeleton and markers in 3D space
 
 ![RGBD-Dog](/figs/test_3dSkeletonAndMarkers.png)
-### test_mask: apply the mask to the image
+### test_mask: 
+Apply the mask to the image
 
 ![RGBD-Dog](/figs/test_mask.png)
 ### test_projection: 
