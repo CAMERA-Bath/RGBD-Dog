@@ -70,25 +70,25 @@ Data for each dog is located in its own folder. The structure of this folder is 
   - skinningWeights.mat
   - vskSticks.txt
 - motion\_MOTION_NAME
- - kinect_depth
-    - camera\_CAMERA_ID
-        - images
-        - masks
-    - ...
- - kinect_rgb
-    - camera\_CAMERA_ID
-        - images
-        - masks
-    - ...
- - motion_capture
-    - markers.json
-    - skeleton.bvh
-    - timecodes.json
- - sony
-    - camera\_CAMERA_ID
-        - masks
-        - camera\_CAMERA\_ID_2K.mp4
-    - ...
+  - kinect_depth
+     - camera\_CAMERA_ID
+         - images
+         - masks
+     - ...
+  - kinect_rgb
+     - camera\_CAMERA_ID
+         - images
+         - masks
+     - ...
+  - motion_capture
+     - markers.json
+     - skeleton.bvh
+     - timecodes.json
+  - sony
+     - camera\_CAMERA_ID
+         - masks
+         - camera\_CAMERA\_ID_2K.mp4
+     - ...
 - motion\_MOTION_NAME
 - ...
 
