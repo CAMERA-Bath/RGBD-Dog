@@ -8,6 +8,7 @@
     * [Contents](#contents)
     * [Layout](#layout)
 	* [Access](#access)
+	* [Revisions](#access)
   * [Code](#code)
     * [Dependencies](#dependencies)
   * [Citation](#citation)
@@ -95,10 +96,14 @@ Data for each dog is located in its own folder. The structure of this folder is 
 ### Access
 This data is available for academic use. Please have a staff faculty member complete the form Data_Release_Form_RGBDDog_CVPR_2020.pdf, listed on this github page, and email it to [Sinéad Kearney](s.kearney@bath.ac.uk). You will then receive details on how to access the data. Companies should instead contact [Prof. Darren Cosker](d.p.cosker@bath.ac.uk).
 
+### Revisions
+Although all efforts were made to ensure that the data provided is correct, the details of any required revisions will be given in this section.
+
+
 ## Code
 We provide code for visualising the data in both Python and Blender. This code is located in the "Source" folder. We also provide the shape model, structured to be similar to the Skinned Multi-Person Linear model (SMPL), Skinned Multi-Animal Linear model (SMAL), etc. We call this model the DynaDog model, and is located in "DynaDog_model".
 
-### Dependenices
+### Dependencies
 All code has been tested using Python3 on Windows 10. Blender is version 2.79.
 
 Python libraries used:
