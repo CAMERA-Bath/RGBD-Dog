@@ -5,6 +5,8 @@ as written by Yuxiao Zhou, https://github.com/CalciferZh
 For ease of comparison, this model has been structured similarly to SMPL, SMAL, etc.
 
 You will need to set the base dataset directory path in "datasetFolder"
+
+TODO: optimise code for applying pose to skeleton and mesh
 '''
 
 import numpy as np
