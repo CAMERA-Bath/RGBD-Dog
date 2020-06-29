@@ -113,6 +113,7 @@ Python libraries used:
 * cv2
 * matplotlib
 * pickle
+* objloader
 
 ## Citation
 If you find this dataset useful, we would kindly ask you to cite:
