@@ -23,7 +23,7 @@ def SetValues():
 	return pathToMainDataset, dog, motion, cameraFrame
 	
 	
-def main(pathToMainDataset, dog, motion, cameraFrame):
+def main(pathToMainDataset, dog, motion, cameraFrame, plotMesh=True):
 
 	skelFrame = cameraFrame+1
 	
@@ -100,12 +100,14 @@ def main(pathToMainDataset, dog, motion, cameraFrame):
 	# apply root translation
 	verts = v + root_trans.reshape([1, 3]) 
 	
-	fig = plt.figure(); ax = fig.add_subplot(111, projection='3d')	
-	ax, fig = utils.Plot3d(bvhJoints, connections=skelConnections, style='bo-', ax=ax, differentColoursForSides=False)
-	ax.plot(verts[:,0], verts[:,1], verts[:,2], 'go', markersize=2)
-	plt.title('skeleton and mesh with skinning applied')
-	ax.set_xlabel('x'); ax.set_ylabel('y'); ax.set_aspect('auto')
-	plt.show()
+	if plotMesh:
+		fig = plt.figure(); ax = fig.add_subplot(111, projection='3d')	
+		ax, fig = utils.Plot3d(bvhJoints, connections=skelConnections, style='bo-', ax=ax, differentColoursForSides=False)
+		ax.plot(verts[:,0], verts[:,1], verts[:,2], 'go', markersize=2)
+		plt.title('skeleton and mesh with skinning applied')
+		ax.set_xlabel('x'); ax.set_ylabel('y'); ax.set_aspect('auto')
+		plt.show()
+	return verts, bvhJoints
 		
 	
 	

@@ -28,5 +28,10 @@ Apply the animation from a bvh file to the dog
 
 ![RGBD-Dog](/figs/test_skinning.png)
 
+### test_meshToSmalMesh
+Convert the resulting skinned mesh to the SMAL representation and calculate 3D joint locations
+
+![RGBD-Dog](/figs/test_SMAL.png)
+
 Each file contains variables to edit before running. Please see the file itself.
 
