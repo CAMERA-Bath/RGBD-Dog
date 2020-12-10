@@ -18,6 +18,9 @@ from mpl_toolkits.mplot3d import Axes3D
 import pickle				
 np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
 
+import pkg_resources
+scipyVersion = float(pkg_resources.get_distribution('scipy').version[:-2]) # eg: 1.4
+
 import sys, os
 sys.path.insert(0, os.path.abspath('../Source'))
 from utils import utils
@@ -124,8 +127,12 @@ class DynaDog():
 		
 
 		# convert from euler to rotation matrices
-		defaultPreRot = Rsci.from_euler('xyz', defaultPreRot , degrees=True).as_dcm()
-		defaultPreRot_inv = Rsci.from_euler('xyz', defaultPreRot_inv , degrees=True).as_dcm()
+		if scipyVersion < 1.4:
+			defaultPreRot = Rsci.from_euler('xyz', defaultPreRot , degrees=True).as_dcm()
+			defaultPreRot_inv = Rsci.from_euler('xyz', defaultPreRot_inv , degrees=True).as_dcm()
+		else:
+			defaultPreRot = Rsci.from_euler('xyz', defaultPreRot , degrees=True).as_matrix()
+			defaultPreRot_inv = Rsci.from_euler('xyz', defaultPreRot_inv , degrees=True).as_matrix()
 			
 		# create "world" rotation matrices
 		defaultPreRot_inv_world = np.empty((self.numJoints, 3, 3))
@@ -211,7 +218,10 @@ class DynaDog():
 		elif self.pose_rotation_type == 'quat':
 			self.R = np.zeros((43,3,3))
 			for rotIdx, rot in enumerate(self.pose):
-				self.R[rotIdx] = Rsci.from_quat(rot).as_dcm()
+				if scipyVersion < 1.4:
+					self.R[rotIdx] = Rsci.from_quat(rot).as_dcm()
+				else:
+					self.R[rotIdx] = Rsci.from_quat(rot).as_matrix()
 		# self.R.shape (43, 3, 3)
 
 		# create a matrix where the shoulderEarTrans have "trickled down" the kinematic chain
@@ -244,7 +254,10 @@ class DynaDog():
 		# manipulate the quaternions to get the result we except to see
 		preRot = preRot[:,(2,0,1,3),0] # shape = (43,4)
 		preRot[:,3] *= -1
-		rot = Rsci.from_quat(preRot).as_dcm()
+		if scipyVersion < 1.4:
+			rot = Rsci.from_quat(preRot).as_dcm()
+		else:
+			rot = Rsci.from_quat(preRot).as_matrix()
 		
 		# the rotation is applied by first removing the "default pre-rotation", finally applying the "default pre-rotation" back on
 		rot = np.matmul(rot, self.defaultPreRot_inv_world)
@@ -430,6 +443,7 @@ def NormaliseRotations(data, opts=None, unnormalise=0):
 	centerAndVarTo1 = 1
 
 	if opts is None:
+		opts = {}
 		opts['withDofOnly'] = withDofOnly
 		opts['rotType'] = rotType
 		opts['centerAndVarTo1'] = centerAndVarTo1
@@ -485,18 +499,15 @@ def NormaliseRotations(data, opts=None, unnormalise=0):
 
 	return data_new
 	
-	
-if __name__ == '__main__':
+def main():
 
-
-	
 	modelPath = os.path.join(datasetFolder, 'shapeModel', 'dynaDog_v1.0.p')
 
 	print('loading model from', modelPath)
 	dynaDog = DynaDog(modelPath)
 	
 	# shape parameters
-	beta = dynaDog.shape_weights[0,:]
+	beta = np.zeros(dynaDog.beta_shape)
 
 	# pose parameters
 	pose = np.zeros(dynaDog.pose_shape)
@@ -536,4 +547,8 @@ if __name__ == '__main__':
 	ax, fig = utils.Plot3d(dynaDog.J_neutral, style='bo-', ax=ax, differentColoursForSides=True)
 	ax.set_xlabel('x');ax.set_ylabel('y');ax.set_aspect('auto');plt.show()
 	'''
+	
+	
+if __name__ == '__main__':
+	main()
 		
