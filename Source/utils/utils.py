@@ -642,7 +642,7 @@ def GetFilesInFolder(myPath, fileType='', contains=''):
 def SetVideoToFrameNumber(vidFile, frameNumber):
 
 	ret = False
-	if type(vidFile) is cv2.VideoCapture:
+	if isinstance(vidFile, type(cv2.VideoCapture(0))):
 		ret = vidFile.set(cv2.CAP_PROP_POS_FRAMES,frameNumber)
 	else:
 		vidFile = cv2.VideoCapture(vidFile)
