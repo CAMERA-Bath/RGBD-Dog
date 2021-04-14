@@ -94,7 +94,7 @@ Data for each dog is located in its own folder. The structure of this folder is 
 - ...
 
 ### Access
-This data is available for academic use. Please have a staff faculty member complete the form Data_Release_Form_RGBDDog_CVPR_2020.pdf, listed on this github page, and email it to [Sinéad Kearney](s.kearney@bath.ac.uk). You will then receive details on how to access the data. Companies should instead contact [Prof. Darren Cosker](d.p.cosker@bath.ac.uk).
+This data is available for academic use. Please have a staff faculty member complete the form Data_Release_Form_RGBDDog_CVPR_2020.pdf, listed on this github page, and email it to [Prof. Darren Cosker](d.p.cosker@bath.ac.uk). You will then receive details on how to access the data. Companies should also contact [Prof. Darren Cosker](d.p.cosker@bath.ac.uk).
 
 ### Revisions
 Although all efforts were made to ensure that the data provided is correct, the details of any required revisions will be given in this section.
@@ -130,4 +130,4 @@ year = {2020}
 
 
 ## Contact
-This code is maintained by [Sinéad Kearney](s.kearney@bath.ac.uk)
+This code is no longer actively maintained.
